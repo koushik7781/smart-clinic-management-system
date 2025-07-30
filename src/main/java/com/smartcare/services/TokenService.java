@@ -1,4 +1,4 @@
-package com.smartcare.security;
+package com.smartcare.services;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
