@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="login-container" style="width: 500px;">
+        <h2>Welcome to SmartCare</h2>
+        <div id="user-info"></div>
+
+        <div id="admin-section" style="display: none;">
+            <h3>Admin Tools</h3>
+            <button>Add New Doctor</button>
+        </div>
+
+        <div id="patient-section" style="display: none;">
+            <h3>Find a Doctor</h3>
+            <input type="text" id="doctorSearch" placeholder="Search by name...">
+            <ul id="doctor-list"></ul>
+        </div>
+
+        <button onclick="logout()">Logout</button>
+    </div>
+
+    <script>
+        function logout() {
+            localStorage.removeItem('jwt');
+            window.location.href = '/login.html';
+        }
+
+        document.addEventListener('DOMContentLoaded', async function() {
+            const token = localStorage.getItem('jwt');
+            if (!token) {
+                window.location.href = '/login.html';
+                return;
+            }
+
+            // Decode token to find user role (simplified)
+            const payload = JSON.parse(atob(token.split('.')[1]));
+            const username = payload.sub;
+            document.getElementById('user-info').textContent = `Logged in as: ${username}`;
+
+            // Show sections based on role
+            if (username.toLowerCase() === 'admin') {
+                document.getElementById('admin-section').style.display = 'block';
+            } else {
+                document.getElementById('patient-section').style.display = 'block';
+                // Fetch and display doctors for patients
+                const response = await fetch('/api/doctors', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const doctors = await response.json();
+                const list = document.getElementById('doctor-list');
+                doctors.forEach(doctor => {
+                    const li = document.createElement('li');
+                    li.textContent = `Dr. ${doctor.firstName} ${doctor.lastName} - ${doctor.specialty}`;
+                    list.appendChild(li);
+                });
+            }
+        });
+    </script>
+</body>
+</html>
