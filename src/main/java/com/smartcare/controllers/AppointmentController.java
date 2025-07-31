@@ -5,7 +5,7 @@ import com.smartcare.services.AppointmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.List; // Add this import
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/appointments")
@@ -16,7 +16,8 @@ public class AppointmentController {
 
     @PostMapping("/book")
     public ResponseEntity<Appointment> bookAppointment(@RequestBody Appointment appointment) {
-        Appointment savedAppointment = appointmentService.saveAppointment(appointment);
+        // Use the correct method name: bookAppointment
+        Appointment savedAppointment = appointmentService.bookAppointment(appointment);
         return ResponseEntity.ok(savedAppointment);
     }
 

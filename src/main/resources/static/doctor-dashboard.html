@@ -12,8 +12,31 @@
         <button onclick="logout()">Logout</button>
     </div>
     <script>
-        // Add script to fetch appointments for the logged-in doctor
-        // and populate the #appointment-list
+        function logout() {
+            localStorage.removeItem('jwt');
+            window.location.href = '/login.html';
+        }
+
+        document.addEventListener('DOMContentLoaded', async function() {
+            const token = localStorage.getItem('jwt');
+            if (!token) {
+                window.location.href = '/login.html';
+                return;
+            }
+
+            // Assuming doctor ID is 1 for this example
+            const doctorId = 1;
+            const response = await fetch(`/api/appointments/doctor/${doctorId}`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const appointments = await response.json();
+            const list = document.getElementById('appointment-list');
+            appointments.forEach(appt => {
+                const li = document.createElement('li');
+                li.textContent = `Date: ${new Date(appt.appointmentDate).toLocaleString()} - Patient: ${appt.patient.firstName} ${appt.patient.lastName} - Reason: ${appt.reason}`;
+                list.appendChild(li);
+            });
+        });
     </script>
 </body>
 </html>

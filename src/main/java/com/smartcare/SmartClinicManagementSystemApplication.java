@@ -9,5 +9,4 @@ public class SmartClinicManagementSystemApplication {
     public static void main(String[] args) {
         SpringApplication.run(SmartClinicManagementSystemApplication.class, args);
     }
-
 }
